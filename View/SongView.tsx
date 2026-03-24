@@ -10,7 +10,7 @@ export function SongView() {
  );
 
  function handleAdicionar() {
-  SongController.adicionarProduto(nome,(listaAtualizada) => {
+  SongController.adicionarSong(nome,(listaAtualizada) => {
     setSongs(listaAtualizada); 
     setNome("");
   },
@@ -21,7 +21,7 @@ export function SongView() {
 }
 
 function handleRemover(id: number) {
-  SongController.removerProduto(id,(listaAtualizada) => {
+  SongController.removerSong(id,(listaAtualizada) => {
     setSongs(listaAtualizada);
   },
  (mensagemErro) => {

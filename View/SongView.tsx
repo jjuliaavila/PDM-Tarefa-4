@@ -1,38 +1,29 @@
-import React, {useState} from 'react';
-import { FlatList, Text, View, TextInput, SafeAreaView, Button, Alert, StyleSheet } from 'react-native';
-import { Song } from "../models/Song";
-import { SongController } from "../controller/SongController"
+import React, { useState } from 'react';
+import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { SongController } from '../controller/SongController';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParams } from '../navigation/types';
 
 export function SongView() {
   const [nome, setNome] = useState("");
-  const [songs, setSongs] = useState<Song[]>(
-    SongController.carregarSongs()
- );
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
 
- function handleAdicionar() {
-  SongController.adicionarSong(nome,(listaAtualizada) => {
-    setSongs(listaAtualizada); 
-    setNome("");
-  },
- (mensagemErro) => {
-    Alert.alert("Erro", mensagemErro);
+  function handleAdicionar() {
+    SongController.adicionarSong(nome,
+      () => {
+        setNome("");
+        navigation.navigate("SongList");
+      },
+      (mensagemErro) => {
+        Alert.alert("Erro", mensagemErro);
+      }
+    );
   }
- );
-}
 
-function handleRemover(id: number) {
-  SongController.removerSong(id,(listaAtualizada) => {
-    setSongs(listaAtualizada);
-  },
- (mensagemErro) => {
-    Alert.alert("Erro", mensagemErro);
-  }
- );
-}
-
-return (
-  <View style={{ flex: 1, backgroundColor: '#121212', padding: 20 }}>
-      <Text style={styles.titulo}>Lista de Músicas</Text>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.titulo}>Adicionar Música</Text>
       <TextInput
         style={styles.input}
         placeholder="Nome da música..."
@@ -41,46 +32,12 @@ return (
         onChangeText={setNome}
       />
       <Button title="Adicionar" onPress={handleAdicionar} />
-      <FlatList
-        data={songs}
-        keyExtractor={(item: Song) => item.id.toString()}
-        renderItem={({ item }: { item: Song }) => (
-          <View style={styles.item}>
-            <Text style={styles.itemTexto}>{item.nome}</Text>
-          <Button title="Remover" color="#e53935" onPress={() => handleRemover(item.id)} />
-          </View>
-        )}
-      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titulo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#ffffff',
-    marginBottom: 20,
-    marginTop: 10,
-  },
-  input: {
-    backgroundColor: '#1e1e1e',
-    borderColor: '#333',
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 12,
-    color: '#ffffff',
-    fontSize: 16,
-    marginBottom: 10,
-  },
-  item: {
-    backgroundColor: '#1e1e1e',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 8,
-  },
-  itemTexto: {
-    color: '#ffffff',
-    fontSize: 16,
-  },
+  container: { flex: 1, backgroundColor: '#121212', padding: 20 },
+  titulo: { fontSize: 24, fontWeight: 'bold', color: '#ffffff', marginBottom: 20, marginTop: 10 },
+  input: { backgroundColor: '#1e1e1e', borderColor: '#333', borderWidth: 1, borderRadius: 8, padding: 12, color: '#ffffff', fontSize: 16, marginBottom: 10 },
 });

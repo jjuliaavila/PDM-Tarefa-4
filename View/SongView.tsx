@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
 import { SongController } from '../controller/SongController';
 import { useNavigation } from '@react-navigation/native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParams } from '../navigation/types';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { TabParams } from '../navigation/types';
 
 export function SongView() {
   const [nome, setNome] = useState("");
-  const navigation = useNavigation<NativeStackNavigationProp<RootStackParams>>();
+  const navigation = useNavigation<BottomTabNavigationProp<TabParams>>();
 
   function handleAdicionar() {
     SongController.adicionarSong(nome,
